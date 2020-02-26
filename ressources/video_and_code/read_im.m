@@ -1,5 +1,5 @@
 % Filename
-file = "news.qcif";
+file = "../../data/images/news.qcif";
 
 % Open the file
 fid = fopen(file,'r');
@@ -11,4 +11,4 @@ fid = fopen(file,'r');
 imagesc(compY);
 
 % Close the file
-fclose(fid)
+fclose(fid);

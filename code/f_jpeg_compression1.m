@@ -23,22 +23,14 @@
 % 
 %**********************************************************************************************
 
-function  [] = f_jpeg_compression(fid)
+function  [image_DCT] = f_jpeg_compression1(component)
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
 
-
-    % Load an image in YUV format. To load the next image, apply the function again.
-    [compY,compU,compV]=yuv_readimage(fid);
+    % DCT of each 8x8 block of the image component
+    image_DCT = bdct(component, [8,8]);
     
-    image_components = [compY, compU, compV];
-    
-%     for image_component = image_components
-%         image_dct = bdct(Image, [8,8]);
-%     end
-    
-    % Close the file
-    fclose(fid);
+    %Quantification (scalar uniform)
 
 end
 

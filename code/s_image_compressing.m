@@ -28,7 +28,11 @@ fid = fopen(file,'r');
 if (fid == -1)
     disp('Error with your file, check the filename.');
 else
-    f_jpeg_compression(fid)
+    [compY,compU,compV]=yuv_readimage(fid);
+    compY_compression = f_jpeg_compression1(compY);
+    compU_compression = f_jpeg_compression1(compU);
+    compV_compression = f_jpeg_compression1(compV);
+    fclose(fid);
 end
 
 

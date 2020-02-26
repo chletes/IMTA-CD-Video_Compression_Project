@@ -66,9 +66,9 @@ function  [Q50] = f_jpeg_compression(component)
     end
     
     % DPCM sur dc_coefficients
-    dc_dpcm_coefficients = f_dpcm_de_coder(dc_coefficients);
+    
     % RLE sur ac_coefficients
-    ac_rle_coefficients = f_rle_de_coder(ac_coefficients);
+    
     % Huffman sur dc_coefficients
     %source = cell(1,1);
     %source{1} = f_balayage(block_q);

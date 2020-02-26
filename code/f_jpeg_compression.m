@@ -23,7 +23,7 @@
 % 
 %**********************************************************************************************
 
-function  [image_DCT] = f_jpeg_compression1(component)
+function  [image_DCT] = f_jpeg_compression(component)
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
 

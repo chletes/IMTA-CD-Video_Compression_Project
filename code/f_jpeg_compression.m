@@ -23,7 +23,7 @@
 % 
 %**********************************************************************************************
 
-function  [Q50] = f_jpeg_compression(component)
+function  compressed_component = f_jpeg_compression(component)
     addpath('../ressources/TP1_Lossless_Coding/');
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
@@ -75,6 +75,7 @@ function  [Q50] = f_jpeg_compression(component)
     %[source_coded, Res] = Huff06(source, 1,0);
     %coded_jpeg_component = [coded_jpeg_component; source_coded];
     % Huffman sur ac_coefficients
+    compressed_component = dc_dpcm_coefficients;
 end
 
 

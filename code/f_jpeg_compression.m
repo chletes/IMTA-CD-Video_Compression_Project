@@ -23,7 +23,7 @@
 % 
 %**********************************************************************************************
 
-function  compressed_component = f_jpeg_compression(component)
+function  [compressed_component, compressed_info] = f_jpeg_compression(component)
     addpath('../ressources/TP1_Lossless_Coding/');
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
@@ -71,7 +71,9 @@ function  compressed_component = f_jpeg_compression(component)
     ac_rle_coefficients = f_rle_de_coder(ac_coefficients);
     % Huffman sur les dc et ac coefficients
     [Huffman_cell] = f_preparing_for_huffman(dc_dpcm_coefficients, ac_rle_coefficients);
-    [compressed_component, Res] = Huff06(Huffman_cell, 1,0);
+    source = {};
+    source{1,1} = Huffman_cell;
+    [compressed_component, compressed_info] = Huff06(source, 1,0);
 end
 
 

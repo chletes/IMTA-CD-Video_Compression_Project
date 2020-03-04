@@ -69,13 +69,9 @@ function  compressed_component = f_jpeg_compression(component)
     dc_dpcm_coefficients = f_dpcm_de_coder(dc_coefficients);
     % RLE sur ac_coefficients
     ac_rle_coefficients = f_rle_de_coder(ac_coefficients);
-    % Huffman sur dc_coefficients
-    %source = cell(1,1);
-    %source{1} = f_balayage(block_q);
-    %[source_coded, Res] = Huff06(source, 1,0);
-    %coded_jpeg_component = [coded_jpeg_component; source_coded];
-    % Huffman sur ac_coefficients
-    compressed_component = dc_dpcm_coefficients;
+    % Huffman sur les dc et ac coefficients
+    [Huffman_cell] = f_preparing_for_huffman(dc_dpcm_coefficients, ac_rle_coefficients);
+    [compressed_component, Res] = Huff06(Huffman_cell, 1,0);
 end
 
 

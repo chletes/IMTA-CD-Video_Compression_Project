@@ -23,7 +23,7 @@
 % 
 %**********************************************************************************************
 
-function  [compressed_component, Res] = f_jpeg_compression(component)
+function  [compressed_component, Res,QX] = f_jpeg_compression(component)
     addpath('../ressources/TP1_Lossless_Coding/');
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
@@ -36,17 +36,17 @@ function  [compressed_component, Res] = f_jpeg_compression(component)
             24 35 55 64 81 104 113 92;
             49 64 78 87 103 121 120 101;
             72 92 95 98 112 100 103 99];
-        
-%      if quality > 50
-%          QX = round(Q50.*(ones(8)*((100-quality)/50)));
+     quality = 10;   
+     if quality > 50
+         QX = round(Q50.*(ones(8)*((100-quality)/50)));
 %          QX = uint8(QX);
-%      elseif quality < 50
-%          QX = round(Q50.*(ones(8)*(50/quality)));
+     elseif quality < 50
+         QX = round(Q50.*(ones(8)*(50/quality)));
 %          QX = uint8(QX);
-%      elseif quality == 50
-%          QX = Q50;
-%      end
-    QX = Q50;
+     elseif quality == 50
+         QX = Q50;
+     end
+    %QX = Q50;
     
     [row, coln] = size(component);
     dc_coefficients = [];

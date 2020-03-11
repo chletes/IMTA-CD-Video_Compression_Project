@@ -19,7 +19,7 @@
 %**********************************************************************************************
 
 
-function [dc_component,ac_coefficients_decoded] = ac_dc_separated(comp_huff)
+function [dc_component,ac_coefficients_decoded] = f_ac_dc_separated(comp_huff)
      dc_component = [];
      ac_component = comp_huff{1};
 %     j = 2;
@@ -43,7 +43,7 @@ function [dc_component,ac_coefficients_decoded] = ac_dc_separated(comp_huff)
     for i = 2:length (dc_component)
         dc_component(i) = dc_component(i-1) + dc_component(i);
     end
-    for i = dc_position;
+    for i = dc_position
         ac_component(i) = pi;
     end
     ac_component = ac_component(ac_component~=pi);

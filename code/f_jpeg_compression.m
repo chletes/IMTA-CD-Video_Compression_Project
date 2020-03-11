@@ -23,7 +23,7 @@
 % 
 %**********************************************************************************************
 
-function  [compressed_component, compressed_info] = f_jpeg_compression(component)
+function  [compressed_component, Res] = f_jpeg_compression(component)
     addpath('../ressources/TP1_Lossless_Coding/');
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
@@ -51,6 +51,8 @@ function  [compressed_component, compressed_info] = f_jpeg_compression(component
     [row, coln] = size(component);
     dc_coefficients = [];
     ac_coefficients = [];
+    true_coefficients = [];
+    coefficient_temps = 0;
     for i1 = 1:8:row
         for i2 = 1:8:coln
             block = component(i1:i1+7,i2:i2+7);
@@ -60,8 +62,16 @@ function  [compressed_component, compressed_info] = f_jpeg_compression(component
             block_DCT = reshape(block_DCT, 8,8); 
             block_q = round(block_DCT./QX);
             coefficients = f_balayage(block_q);
+            
             dc_coefficients = [dc_coefficients, coefficients(1)];
             ac_coefficients = [ac_coefficients, coefficients(2:end)];
+            ac_rle_co = f_rle_de_coder(coefficients(2:end));
+            true_coefficients = [true_coefficients,coefficients(1)-coefficient_temps];
+            for i3 = 1:length(ac_rle_co{1,1})
+                true_coefficients = [true_coefficients,ac_rle_co{1,1}(i3),ac_rle_co{1,2}(i3)];
+            end
+            coefficient_temps = coefficients(1);
+
         end
     end
     
@@ -69,11 +79,49 @@ function  [compressed_component, compressed_info] = f_jpeg_compression(component
     dc_dpcm_coefficients = f_dpcm_de_coder(dc_coefficients);
     % RLE sur ac_coefficients
     ac_rle_coefficients = f_rle_de_coder(ac_coefficients);
-    % Huffman sur les dc et ac coefficients
-    [Huffman_cell] = f_preparing_for_huffman(dc_dpcm_coefficients, ac_rle_coefficients);
-    source = {};
-    source{1,1} = Huffman_cell;
-    [compressed_component, compressed_info] = Huff06(source, 1,0);
+    % Huffman sur dc_coefficients
+    source = cell(1,1);
+    source_vector = [];
+%     ac_coefficient_index = 1;
+%     for i = 1:length (dc_dpcm_coefficients)
+%         number_of_coefficients = 0;
+%         source_each_block = [];
+%         if ac_coefficient_index > length (ac_rle_coefficients{1,2})
+%             break;
+%         end
+%             
+%         while true
+%             if ac_coefficient_index > length (ac_rle_coefficients{1,2})
+%                 break;
+%             end
+%             number_of_coefficients = number_of_coefficients + ac_rle_coefficients{1,2}(ac_coefficient_index);
+%             
+%             if number_of_coefficients >= 63
+%                 ac_rle_coefficients{1,2}(ac_coefficient_index) = ac_rle_coefficients{1,2}(ac_coefficient_index)-number_of_coefficients + 63;
+%                 ac_rle_coefficients{1,1} = [ac_rle_coefficients{1,1}(1:ac_coefficient_index),ac_rle_coefficients{1,1}(ac_coefficient_index),ac_rle_coefficients{1,1}(ac_coefficient_index+1:end)];
+%                 ac_rle_coefficients{1,2} = [ac_rle_coefficients{1,2}(1:ac_coefficient_index),number_of_coefficients - 63,ac_rle_coefficients{1,2}(ac_coefficient_index+1:end)];
+%                 source_each_block = [source_each_block,ac_rle_coefficients{1,1}(ac_coefficient_index),ac_rle_coefficients{1,2}(ac_coefficient_index)];
+%                 ac_coefficient_index = ac_coefficient_index +1;
+%                 
+%                 break;
+%             else
+%                 source_each_block = [source_each_block,ac_rle_coefficients{1,1}(ac_coefficient_index),ac_rle_coefficients{1,2}(ac_coefficient_index)];
+%                 ac_coefficient_index = ac_coefficient_index +1;
+%             end
+%             
+%         end
+%         source_each_block = [dc_dpcm_coefficients(i),source_each_block];
+%         source_vector = [source_vector,source_each_block];
+%     end
+%         
+%             
+    source{1} =  true_coefficients;
+   [compressed_component, Res] = Huff06(source, 1,0);
+    
+   
+
+        
+    
 end
 
 

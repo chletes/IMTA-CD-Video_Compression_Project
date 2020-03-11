@@ -60,9 +60,9 @@ function  [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV)
         i1 = i1 + 2;
         i2 = 1;
     end
-    compR = Qinv(1,1)*compY' + Qinv(1,2)*compU_x4 + Qinv(1,3)*compV_x4;
-    compG = Qinv(2,1)*compY' + Qinv(2,2)*compU_x4 + Qinv(2,3)*compV_x4;
-    compB = Qinv(3,1)*compY' + Qinv(3,2)*compU_x4 + Qinv(3,3)*compV_x4;
+    compR = Qinv(1,1)*compY + Qinv(1,2)*compU_x4 + Qinv(1,3)*compV_x4;
+    compG = Qinv(2,1)*compY + Qinv(2,2)*compU_x4 + Qinv(2,3)*compV_x4;
+    compB = Qinv(3,1)*compY + Qinv(3,2)*compU_x4 + Qinv(3,3)*compV_x4;
     
     compR = compR';
     compG = compG';

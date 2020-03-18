@@ -36,7 +36,7 @@ function  [compressed_component, Res,QX] = f_jpeg_compression(component)
             24 35 55 64 81 104 113 92;
             49 64 78 87 103 121 120 101;
             72 92 95 98 112 100 103 99];
-     quality = 10;   
+     quality = 50;   
      if quality > 50
          QX = round(Q50.*(ones(8)*((100-quality)/50)));
 %          QX = uint8(QX);

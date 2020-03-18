@@ -22,7 +22,7 @@ clc, clear, close all;
 
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 10;
+Nframe = 200;
 % Open the file
 fid = fopen(file,'r');
 if (fid == -1)
@@ -96,12 +96,17 @@ else
         compU_decoded_video{i} = compU_decoded_video{i} + compU_decoded_video{i-1};
         compV_decoded_video{i} = compV_decoded_video{i} + compV_decoded_video{i-1};
     end
-          figure (2);
-          subplot(2,1,1)
-          imagesc(compY{3}); 
-         subplot(2,1,2)
-          imagesc(compY_decoded_video{3}); 
+%           figure (2);
+%           subplot(2,1,1)
+%           imagesc(compY{3}); 
+%          subplot(2,1,2)
+%           imagesc(compY_decoded_video{3});
+% Play video
+    for i = 1:Nframe
+        video(:,:,i) = uint8(compY_decoded_video{i});
+    end
     fclose(fid);
+    implay(video,20);
 end
 
 

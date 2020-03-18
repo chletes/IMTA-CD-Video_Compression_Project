@@ -22,7 +22,7 @@ clc, clear, close all;
 
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 10;
+Nframe = 200;
 % Open the file
 fid = fopen(file,'r');
 if (fid == -1)
@@ -46,15 +46,17 @@ else
     compU_predict_video{1} = compU{1};
     compV_predict_video{1} = compV{1};
     for i = 2:Nframe
-        compY_predict_video{i) = compY{i} - compY{i-1
+        compY_predict_video{i} = compY{i} - compY{i-1};
+        compU_predict_video{i} = compU{i} - compU{i-1};
+        compV_predict_video{i} = compV{i} - compV{i-1};
     end
     for i = 1:Nframe
         size_compY = size (compY{i});
         size_compU = size (compU{i});
         size_compV = size (compV{i});
-        [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY{i});
-        [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU{i});
-        [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV{i});
+        [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY_predict_video{i});
+        [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU_predict_video{i});
+        [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV_predict_video{i});
         compY_compression_video{i} = compY_compression;
         compU_compression_video{i} = compU_compression;
         compV_compression_video{i} = compV_compression;
@@ -89,11 +91,26 @@ else
 %          subplot(2,1,2)
 %           imagesc(compY_decoded'); 
     end
-          figure (2);
-          subplot(2,1,1)
-          imagesc(compU{1}); 
-         subplot(2,1,2)
-          imagesc(compU_decoded_video{1}); 
+    for i = 2:Nframe
+        compY_decoded_video{i} = compY_decoded_video{i} + compY_decoded_video{i-1};
+        compU_decoded_video{i} = compU_decoded_video{i} + compU_decoded_video{i-1};
+        compV_decoded_video{i} = compV_decoded_video{i} + compV_decoded_video{i-1};
+    end
+%           figure (2);
+%           subplot(2,1,1)
+%           imagesc(compY{3}); 
+%          subplot(2,1,2)
+%           imagesc(compY_decoded_video{3});
+    V1 = VideoWriter(['akiyo.avi']);
+
+    %V = VideoWriter(['filename.avi'],'Gray Scale AVI');
+    V1.FrameRate = 80; 
+    V1.Quality = 100;  
+    open(V1);
+    for i=1:300
+       img=uint8(Y{i});
+       writeVideo(V1,img);
+    end
     fclose(fid);
 end
 

@@ -28,7 +28,7 @@ fid = fopen(file,'r');
 if (fid == -1)
     disp('Error with your file, check the filename.');
 else
-    [compY,compU,compV]=yuv_import("../data/images/news.qcif",[176 144],Nframe,0);
+    [compY,compU,compV]=yuv_import("../data/images/akiyo.qcif",[144 176],Nframe,0);
     compY_compression_video = cell(1,Nframe);
     compU_compression_video = cell(1,Nframe);
     compV_compression_video = cell(1,Nframe);
@@ -62,9 +62,9 @@ else
         compY_decoded_video{i} = compY_decoded;
         compU_decoded_video{i} = compU_decoded;
         compV_decoded_video{i} = compV_decoded;        
-  %      [compR, compG, compB] = f_yuv_to_rgb(compY{i}, compU{i}, compV{i});
+        [compR, compG, compB] = f_yuv_to_rgb(compY{i}, compU{i}, compV{i});
 
-    %    [compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
+        [compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
     %     rgbImage = cat(3, compR,compG,compB);
     %     rgbImage_decoded = cat(3, compR_decoded,compG_decoded,compB_decoded);
     %     gray_pixel = 0.27*compR + 0.67*compG + 0.06*compB;
@@ -81,9 +81,9 @@ else
     end
           figure (2);
           subplot(2,1,1)
-          imagesc(compU{1}); 
+          imagesc(compY{1}'); 
          subplot(2,1,2)
-          imagesc(compU_decoded_video{1}); 
+          imagesc(compY_decoded_video{1}'); 
     fclose(fid);
 end
 

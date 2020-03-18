@@ -29,6 +29,9 @@ if (fid == -1)
     disp('Error with your file, check the filename.');
 else
     [compY,compU,compV]=yuv_import("../data/images/news.qcif",[176 144],Nframe,0);
+    compY_predict_video = cell(1,Nframe);
+    compU_predict_video = cell(1,Nframe);
+    compV_predict_video = cell(1,Nframe);    
     compY_compression_video = cell(1,Nframe);
     compU_compression_video = cell(1,Nframe);
     compV_compression_video = cell(1,Nframe);
@@ -38,6 +41,13 @@ else
     compY_decoded_video = cell(1,Nframe);
     compU_decoded_video = cell(1,Nframe);
     compV_decoded_video = cell(1,Nframe);
+    %predicted coding
+    compY_predict_video{1} = compY{1};
+    compU_predict_video{1} = compU{1};
+    compV_predict_video{1} = compV{1};
+    for i = 2:Nframe
+        compY_predict_video{i) = compY{i} - compY{i-1
+    end
     for i = 1:Nframe
         size_compY = size (compY{i});
         size_compU = size (compU{i});

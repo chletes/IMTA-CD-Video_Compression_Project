@@ -16,8 +16,8 @@ clear all
 % Thus we just change the sequence / image name and the whole analysis is
 % done for that particular sequence
 
-imageName = 'caltrain';
-mbSize = 16;
+imageName = 'news.qcif';
+mbSize = 8;
 p = 7;
 
 for i = 0:30

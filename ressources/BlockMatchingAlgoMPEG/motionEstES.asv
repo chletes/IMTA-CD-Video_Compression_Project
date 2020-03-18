@@ -17,7 +17,7 @@ function [motionVect, EScomputations] = motionEstES(imgP, imgI, mbSize, p)
 [row col] = size(imgI);
 
 vectors = zeros(2,row*col/mbSize^2);
-costs = ones(2*p + 1, 2*p +1) * row*col;
+costs = ones(2*p + 1, 2*p +1) * row;
 
 computations = 0;
 
@@ -59,7 +59,7 @@ for i = 1 : mbSize : row-mbSize+1
         vectors(1,mbCount) = dy-p-1;    % row co-ordinate for the vector
         vectors(2,mbCount) = dx-p-1;    % col co-ordinate for the vector
         mbCount = mbCount + 1;
-        costs = ones(2*p + 1, 2*p +1) * row*col;
+        costs = ones(2*p + 1, 2*p +1) * 65537;
     end
 end
 

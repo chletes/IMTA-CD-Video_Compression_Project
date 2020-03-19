@@ -22,7 +22,7 @@ clc, clear, close all;
 
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 200;
+Nframe = 50;
 % Open the file
 fid = fopen(file,'r');
 if (fid == -1)

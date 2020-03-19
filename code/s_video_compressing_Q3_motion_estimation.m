@@ -22,7 +22,7 @@ clc, clear, close all;
 addpath('../ressources/BlockMatchingAlgoMPEG/');
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 200;
+Nframe = 50;
 total_bit = 0;
 % Open the file
 fid = fopen(file,'r');
@@ -89,18 +89,56 @@ else
         compressed_infoY_video{i} = compressed_infoY;
         compressed_infoU_video{i} = compressed_infoU;
         compressed_infoV_video{i} = compressed_infoV;
-        total_bit = total_bit + compressed_infoY (1,3);
+        total_bit = total_bit + compressed_infoY (1,3)+compressed_infoU (1,3)+compressed_infoV (1,3);
     end  
+
+    motionY_huffman = cell(1,1);
+    motionU_huffman = cell(1,1);
+    motionV_huffman = cell(1,1);
+    for i = 1:Nframe-1  
+        motionY_huffman{1} = reshape ( motionVectY_video{i},[1,length(motionVectY_video{i}(1,:))*2]);
+        motionU_huffman{1} = reshape ( motionVectU_video{i},[1,length(motionVectU_video{i}(1,:))*2]);
+        motionV_huffman{1} = reshape ( motionVectV_video{i},[1,length(motionVectV_video{i}(1,:))*2]);
+%         motionY_huffman_rle = f_rle_de_coder(reshape ( motionVectY_video{i},[1,length(motionVectY_video{i}(1,:))*2]));
+%         motionU_huffman_rle = f_rle_de_coder(reshape ( motionVectU_video{i},[1,length(motionVectU_video{i}(1,:))*2]));
+%         motionV_huffman_rle = f_rle_de_coder(reshape ( motionVectV_video{i},[1,length(motionVectV_video{i}(1,:))*2]));
+%         motionY_huffman{1} = zeros(1,length(motionY_huffman_rle{1})*2);
+%         motionU_huffman{1} = zeros(1,length(motionU_huffman_rle{1})*2);
+%         motionV_huffman{1} = zeros(1,length(motionV_huffman_rle{1})*2);
+%         motionY_huffman{1}(1:2:end-1) = motionY_huffman_rle{1};
+%         motionY_huffman{1}(2:2:end)   = motionY_huffman_rle{2};
+%         motionU_huffman{1}(1:2:end-1) = motionU_huffman_rle{1};
+%         motionU_huffman{1}(2:2:end)   = motionU_huffman_rle{2};
+%         motionV_huffman{1}(1:2:end-1) = motionV_huffman_rle{1};
+%         motionV_huffman{1}(2:2:end)   = motionV_huffman_rle{2};        
+       [motionY_compression,motionY_info] = Huff06(motionY_huffman,1,0);
+       [motionU_compression,motionU_info] = Huff06(motionU_huffman,1,0);
+       [motionV_compression,motionV_info] = Huff06(motionV_huffman,1,0);
+       motionY_compression_video{i} = motionY_compression;
+       motionU_compression_video{i} = motionU_compression;
+       motionV_compression_video{i} = motionV_compression;
+       total_bit = total_bit + motionY_info(1,3) + motionU_info(1,3) + motionV_info(1,3);
+    end
     %% decoder
-%         compY_huff = Huff06(compY_compression);
-%         compU_huff = Huff06(compU_compression);
-%         compV_huff = Huff06(compV_compression);
-%         [compY_decoded] = ac_dc_separated(compY_huff,QX,size_compY);
-%         [compU_decoded] = ac_dc_separated(compU_huff,QX,size_compU);
-%         [compV_decoded] = ac_dc_separated(compV_huff,QX,size_compV);
-%         compY_decoded_video{i} = compY_decoded;
-%         compU_decoded_video{i} = compU_decoded;
-%         compV_decoded_video{i} = compV_decoded;        
+    for i = 1:Nframe-1
+        motionY_reconstructed = Huff06(motionY_compression_video{i});
+        motionU_reconstructed = Huff06(motionU_compression_video{i});
+        motionV_reconstructed = Huff06(motionV_compression_video{i});
+        motionY_reconstructed_video{i} = reshape(motionY_reconstructed{1},[2,length(motionVectY_video{i}(1,:))]);
+        motionU_reconstructed_video{i} = reshape(motionU_reconstructed{1},[2,length(motionVectU_video{i}(1,:))]);
+        motionV_reconstructed_video{i} = reshape(motionV_reconstructed{1},[2,length(motionVectV_video{i}(1,:))]);
+    end
+    for i = 1:Nframe
+        compY_huff = Huff06(compY_compression_video{i});
+        compU_huff = Huff06(compU_compression_video{i});
+        compV_huff = Huff06(compV_compression_video{i});
+        [compY_decoded] = ac_dc_separated(compY_huff,QX,size_compY);
+        [compU_decoded] = ac_dc_separated(compU_huff,QX,size_compU);
+        [compV_decoded] = ac_dc_separated(compV_huff,QX,size_compV);
+        compY_decoded_video{i} = compY_decoded;
+        compU_decoded_video{i} = compU_decoded;
+        compV_decoded_video{i} = compV_decoded;  
+    end
 %   %      [compR, compG, compB] = f_yuv_to_rgb(compY{i}, compU{i}, compV{i});
 % 
 %     %    [compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
@@ -118,22 +156,27 @@ else
 % %          subplot(2,1,2)
 % %           imagesc(compY_decoded'); 
 %     end
-%     for i = 2:Nframe
-%         compY_decoded_video{i} = compY_decoded_video{i} + compY_decoded_video{i-1};
-%         compU_decoded_video{i} = compU_decoded_video{i} + compU_decoded_video{i-1};
-%         compV_decoded_video{i} = compV_decoded_video{i} + compV_decoded_video{i-1};
-%     end
+    
+    for i = 2:Nframe
+        imgCompY_decoded = motionComp(compY_decoded_video{i-1}, motionY_reconstructed_video{i-1}, 8);
+        compY_decoded_video{i} = compY_decoded_video{i} + imgCompY_decoded;
+        imgCompU_decoded = motionComp(compU_decoded_video{i-1}, motionU_reconstructed_video{i-1}, 8);
+        compU_decoded_video{i} = compU_decoded_video{i} + imgCompU_decoded;
+        imgCompV_decoded = motionComp(compV_decoded_video{i-1}, motionV_reconstructed_video{i-1}, 8);
+        compV_decoded_video{i} = compV_decoded_video{i} + imgCompV_decoded;        
+    end
 %           figure (2);
 %           subplot(2,1,1)
 %           imagesc(compY{end}); 
 %          subplot(2,1,2)
 %           imagesc(compY_decoded_video{end});
 % % Play video
-%     for i = 1:Nframe
-%         video(:,:,i) = uint8(compY_decoded_video{i});
-%     end
+    for i = 1:Nframe
+        video(:,:,i) = uint8(compY_decoded_video{i});
+    end
      fclose(fid);
-%     implay(video,20);
+     implay(video,5);
+     
 end
 
 

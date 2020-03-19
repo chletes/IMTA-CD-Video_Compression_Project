@@ -22,7 +22,8 @@ clc, clear, close all;
 
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 200;
+Nframe = 100;
+total_bit = 0;
 % Open the file
 fid = fopen(file,'r');
 if (fid == -1)
@@ -51,6 +52,8 @@ else
         compressed_infoY_video{i} = compressed_infoY;
         compressed_infoU_video{i} = compressed_infoU;
         compressed_infoV_video{i} = compressed_infoV;
+        total_bit = total_bit + compressed_infoY (1,3)+compressed_infoU (1,3)+compressed_infoV (1,3);
+
         
     %% decoder
         compY_huff = Huff06(compY_compression);
@@ -73,11 +76,11 @@ else
     % Im(:,:,2)=compG_decoded;
     % Im(:,:,3)=compB_decoded;
     %     imshow(rgbImage);
-          figure (2);
-          subplot(2,1,1)
-          imagesc(compY{1}'); 
-         subplot(2,1,2)
-          imagesc(compY_decoded'); 
+%           figure (2);
+%           subplot(2,1,1)
+%           imagesc(compY{1}); 
+%          subplot(2,1,2)
+%           imagesc(compY_decoded); 
     end
 %           figure (2);
 %           subplot(2,1,1)

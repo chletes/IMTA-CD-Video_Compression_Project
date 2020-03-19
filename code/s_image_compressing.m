@@ -42,10 +42,10 @@ else
     [compY_decoded] = ac_dc_separated(compY_huff,QX,size_compY);
     [compU_decoded] = ac_dc_separated(compU_huff,QX,size_compU);
     [compV_decoded] = ac_dc_separated(compV_huff,QX,size_compV);
-    %[compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV);
+    [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV);
     
     %[compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
-%     rgbImage = cat(3, compR,compG,compB);
+     rgbImage = cat(3, double(compR),double(compG),double(compB))./255;
 %     rgbImage_decoded = cat(3, compR_decoded,compG_decoded,compB_decoded);
 %     gray_pixel = 0.27*compR + 0.67*compG + 0.06*compB;
 % Im=zeros(size(compR_decoded,1),size(compR_decoded,2),3);
@@ -55,9 +55,9 @@ else
 %     imshow(rgbImage);
      figure (2);
      subplot(2,1,1)
-      imagesc(compU'); 
+     imshow(rgbImage); 
      subplot(2,1,2)
-     imagesc(compU_decoded'); 
+     imagesc(compY_decoded); 
     fclose(fid);
 end
 

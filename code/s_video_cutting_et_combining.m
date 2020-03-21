@@ -2,7 +2,7 @@ close all;clear all;clc;
 % il y a 300 frames from 0-299,300frames sur news.qcif
 % il y a 300 frames from 0-299,300frames sur akiyo.qcif
 
-[Y,U,V]=  yuv_import ('../data/images/news.qcif',[176 144],300,0)
+[Y,U,V]=  f_yuv_import ('../data/images/news.qcif',[176 144],300,0);
 
 % for i = 1:length(Y)
 % imshow((uint8(Y{i})))

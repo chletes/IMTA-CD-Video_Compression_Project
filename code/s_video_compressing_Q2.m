@@ -19,7 +19,8 @@
 %**********************************************************************************************
 
 clc, clear, close all;
-
+addpath('../ressources/video_and_code/');
+addpath('../ressources/TP1_Lossless_Coding/');
 %Filename
 file = "../data/images/news.qcif";
 Nframe = 100;
@@ -29,7 +30,7 @@ fid = fopen(file,'r');
 if (fid == -1)
     disp('Error with your file, check the filename.');
 else
-    [compY,compU,compV]=yuv_import("../data/images/news.qcif",[176 144],Nframe,0);
+    [compY,compU,compV]=f_yuv_import("../data/images/news.qcif",[176 144],Nframe,0);
     compY_compression_video = cell(1,Nframe);
     compU_compression_video = cell(1,Nframe);
     compV_compression_video = cell(1,Nframe);
@@ -59,9 +60,9 @@ else
         compY_huff = Huff06(compY_compression);
         compU_huff = Huff06(compU_compression);
         compV_huff = Huff06(compV_compression);
-        [compY_decoded] = ac_dc_separated(compY_huff,QX,size_compY);
-        [compU_decoded] = ac_dc_separated(compU_huff,QX,size_compU);
-        [compV_decoded] = ac_dc_separated(compV_huff,QX,size_compV);
+        [compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
+        [compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
+        [compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
         compY_decoded_video{i} = compY_decoded;
         compU_decoded_video{i} = compU_decoded;
         compV_decoded_video{i} = compV_decoded;        

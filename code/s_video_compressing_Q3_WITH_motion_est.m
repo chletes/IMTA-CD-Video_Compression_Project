@@ -19,10 +19,12 @@
 %**********************************************************************************************
 
 clc, clear, close all;
+addpath('../ressources/video_and_code/');
+addpath('../ressources/TP1_Lossless_Coding/');
 addpath('../ressources/BlockMatchingAlgoMPEG/');
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 300;
+Nframe = 50;
 gap = 8;
 total_bit = 0;
 % Open the file
@@ -30,7 +32,7 @@ fid = fopen(file,'r');
 if (fid == -1)
     disp('Error with your file, check the filename.');
 else
-    [compY,compU,compV]=yuv_import("../data/images/news.qcif",[176 144],Nframe,0);
+    [compY,compU,compV]=f_yuv_import(file,[176 144],Nframe,0);
     motionVectY_video = cell(1,Nframe);
     motionVectU_video = cell(1,Nframe);
     motionVectV_video = cell(1,Nframe);
@@ -182,9 +184,9 @@ else
         compY_huff = Huff06(compY_compression_video{i});
         compU_huff = Huff06(compU_compression_video{i});
         compV_huff = Huff06(compV_compression_video{i});
-        [compY_decoded] = ac_dc_separated(compY_huff,QX,size_compY);
-        [compU_decoded] = ac_dc_separated(compU_huff,QX,size_compU);
-        [compV_decoded] = ac_dc_separated(compV_huff,QX,size_compV);
+        [compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
+        [compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
+        [compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
         compY_decoded_video{i} = compY_decoded;
         compU_decoded_video{i} = compU_decoded;
         compV_decoded_video{i} = compV_decoded;  

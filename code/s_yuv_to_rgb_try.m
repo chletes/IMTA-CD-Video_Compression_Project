@@ -31,11 +31,13 @@ else
     [compY,compU,compV]=yuv_readimage(fid);
     [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV);
     rgbImage = cat(3, double(compR),double(compG),double(compB))./255;
-    figure (2);
+    figure (1);
     subplot(2,1,1)
     imshow(rgbImage); 
+    title('RGB image');
     subplot(2,1,2)
     imagesc(compY); 
+    title('Composante Y');
     fclose(fid);
 end
 

@@ -78,12 +78,16 @@ else
         total_bit = total_bit + compressed_infoY (1,3)+compressed_infoU (1,3)+compressed_infoV (1,3);
         
     %% decoder
-        compY_huff = Huff06(compY_compression);
-        compU_huff = Huff06(compU_compression);
-        compV_huff = Huff06(compV_compression);
-        [compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
-        [compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
-        [compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
+        
+        %compY_huff = Huff06(compY_compression);
+        %compU_huff = Huff06(compU_compression);
+        %compV_huff = Huff06(compV_compression);
+        %[compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
+        %[compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
+        %[compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
+        compY_decoded = f_jpeg_decompression(compY_compression, QX, size_compY);
+        compU_decoded = f_jpeg_decompression(compU_compression, QX, size_compU);
+        compV_decoded = f_jpeg_decompression(compV_compression, QX, size_compV);
         compY_decoded_video{i} = compY_decoded;
         compU_decoded_video{i} = compU_decoded;
         compV_decoded_video{i} = compV_decoded;        

@@ -37,12 +37,17 @@ else
     [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU);
     [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV);
 %% decoder
-    compY_huff = Huff06(compY_compression);
-    compU_huff = Huff06(compU_compression);
-    compV_huff = Huff06(compV_compression);
-    [compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
-    [compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
-    [compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
+    %compY_huff = Huff06(compY_compression);
+    %compU_huff = Huff06(compU_compression);
+    %compV_huff = Huff06(compV_compression);
+    %[compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
+    %[compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
+    %[compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
+    compY_decoded = f_jpeg_decompression(compY_compression, QX, size_compY);
+    compU_decoded = f_jpeg_decompression(compU_compression, QX, size_compU);
+    compV_decoded = f_jpeg_decompression(compV_compression, QX, size_compV);
+    
+    
     [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV);
     rgbImage = cat(3, double(compR),double(compG),double(compB))./255;
 %     [compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);

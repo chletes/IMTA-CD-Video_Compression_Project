@@ -21,6 +21,7 @@
 clc, clear, close all;
 addpath('../ressources/video_and_code/');
 addpath('../ressources/TP1_Lossless_Coding/');
+tic
 %Filename
 file = "../data/images/news.qcif";
 
@@ -57,12 +58,19 @@ else
 %     Im(:,:,1)=compR_decoded;
 %     Im(:,:,2)=compG_decoded;
 %     Im(:,:,3)=compB_decoded;
-    figure (2);
-    subplot(2,1,1)
-    imshow(rgbImage); 
-    subplot(2,1,2)
-    imagesc(compY_decoded); 
-    fclose(fid);
+    toc
+    %% Calcul de la distorsion
+    mse = sum(sum(((compY_decoded - compY).^2)))/(size(compY,1)*size(compY,2));
+    PSNR = 10*log10(  ( (  max(max(compY))  )^2   )/mse)
+
+    
+%     fclose(fid);
+%     figure (2);
+%     subplot(2,1,1)
+%     imshow(rgbImage); 
+%     subplot(2,1,2)
+%     imagesc(compY_decoded); 
+    
 end
 
 

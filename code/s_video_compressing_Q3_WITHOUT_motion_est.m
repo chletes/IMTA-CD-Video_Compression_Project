@@ -23,7 +23,7 @@ addpath('../ressources/video_and_code/');
 addpath('../ressources/TP1_Lossless_Coding/');
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 300;
+Nframe = 100;
 gap = 8;
 total_bit = 0;
 % Open the file

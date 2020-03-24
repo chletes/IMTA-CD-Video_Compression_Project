@@ -23,7 +23,7 @@ addpath('../ressources/video_and_code/');
 addpath('../ressources/TP1_Lossless_Coding/');
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 80;
+Nframe = 300;
 gap = 8;
 total_bit = 0;
 % Open the file
@@ -120,6 +120,10 @@ else
             compU_decoded_video{i} = compU_decoded_video{i} + compU_decoded_video{i-1};
             compV_decoded_video{i} = compV_decoded_video{i} + compV_decoded_video{i-1};
     end
+    for i = 1:Nframe
+        [compR, compG, compB] = f_yuv_to_rgb(compY_decoded_video{i}, compU_decoded_video{i}', compV_decoded_video{i}');
+        rgbImage{i} = cat(3, (compR),(compG),compB);
+    end
 
 %           figure (2);
 %           subplot(2,1,1)
@@ -128,10 +132,9 @@ else
 %           imagesc(compY_decoded_video{3});
 % Play video
     for i = 1:Nframe
-        video(:,:,i) = uint8(compY_decoded_video{i});
+        imshow(rgbImage{i});
     end
     fclose(fid);
-    implay(video,Nframe/10);
 end
 
 

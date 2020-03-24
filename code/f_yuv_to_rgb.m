@@ -25,14 +25,16 @@
 
 function  [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV)
     
-    Q = [   0.299   0.587   0.114;
-            -0.169  -0.331  0.5;
-            0.5     -0.419  -0.081];
+    Q = [   0.2126   0.7152   0.0722;
+            -0.09991  -0.33609 0.436;
+            0.615    -0.55861  -0.05639];
+    Qinv = [1 0 1.13983; 1 -0.39465 -0.58060; 1 2.03211 0 ];
         
-    Qinv = inv(Q);
+     Qinv = inv(Q);
+    %Qinv = Qinv';
     compY = double(compY);
-    compU = imresize(double(compU'),2,'bicubic');
-    compV = imresize(double(compV'),2,'bicubic');
+    compU = imresize(double(compU),2,'bicubic');
+    compV = imresize(double(compV),2,'bicubic');
 %     compU_x4 = zeros(2*size(compU,1), 2*size(compU,2));
 %     i1 = 1;
 %     i2 = 1;
@@ -62,9 +64,13 @@ function  [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV)
 %         i1 = i1 + 2;
 %         i2 = 1;
 %     end
-    compR = Qinv(1,1)*compY' + Qinv(1,2)*(compU'-0.5) + Qinv(1,3)*(compV'-0.5);
-    compG = Qinv(2,1)*compY' + Qinv(2,2)*(compU'-0.5) + Qinv(2,3)*(compV'-0.5);
-    compB = Qinv(3,1)*compY' + Qinv(3,2)*(compU'-0.5) + Qinv(3,3)*(compV'-0.5);
+%     compR = Qinv(1,1)*compY' + Qinv(1,2)*(compU) + Qinv(1,3)*(compV);
+%     compG = Qinv(2,1)*compY' + Qinv(2,2)*(compU) + Qinv(2,3)*(compV);
+%     compB = Qinv(3,1)*compY' + Qinv(3,2)*(compU) + Qinv(3,3)*(compV);
+    compB = compY'+1.773*(compU-128);
+    compR = compY'+1.403*(compV-128);
+    compG = compY' - 0.334*(compU-128) - 0.714*(compV-128);
+    
     
     compR = uint8(compR');
     compG = uint8(compG');

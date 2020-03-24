@@ -30,10 +30,10 @@ if (fid == -1)
 else
     [compY,compU,compV]=yuv_readimage(fid);
     [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV);
-    rgbImage = cat(3, double(compR),double(compG),double(compB))./255;
+    rgbImage = cat(3, (compR),(compG),compB);
     figure (1);
     subplot(2,1,1)
-    imshow(rgbImage); 
+    imshow(rgbImage,[16 235]); 
     title('RGB image');
     subplot(2,1,2)
     imagesc(compY); 

@@ -50,7 +50,7 @@ else
     
     
     [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV);
-    rgbImage = cat(3, double(compR),double(compG),double(compB))./255;
+    rgbImage = cat(3, (compR),(compG),(compB));
 %     [compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
 %     rgbImage_decoded = cat(3, compR_decoded,compG_decoded,compB_decoded);
 %     gray_pixel = 0.27*compR + 0.67*compG + 0.06*compB;

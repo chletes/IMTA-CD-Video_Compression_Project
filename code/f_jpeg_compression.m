@@ -27,13 +27,13 @@ function  [compressed_component, Res,QX] = f_jpeg_compression(component)
     addpath('../ressources/TP1_Lossless_Coding/');
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
-    %% Début du calcul de la matrice de quantification. 
-    %La qualité de l'image dépend de cette matrice là. 
+    %% Dï¿½but du calcul de la matrice de quantification. 
+    %La qualite de l'image depend de cette matrice.
     %On aurait pu faire un input() pour que l'utilisateur du 
-    %code puisse changer la qualité, mais pour faire nos tests, c'est plus 
-    %simple comme ça.
-    quality = 50;  %La qualité est fixé avec cette variable là. 
-    
+    %code puisse changer la qualite, mais pour faire nos tests, c'est plus 
+    %simple comme ca.
+    quality = 10;  %La qualite est fixee avec cette variable la 
+    disp(['Q = ',  num2str(quality), '%']);
     Q50 = [ 16 11 10 16 24 40 51 61;
             12 12 14 19 26 58 60 55;
             14 13 16 24 40 57 69 56;
@@ -54,7 +54,7 @@ function  [compressed_component, Res,QX] = f_jpeg_compression(component)
      end
     %QX = Q50;
     %%Fin du calcul de la matrice de quantification. 
-    %% Début des étapes pour la compression des blocs 8x8
+    %% Dï¿½but des ï¿½tapes pour la compression des blocs 8x8
     [row, coln] = size(component);
     dc_coefficients = [];
     ac_coefficients = [];
@@ -62,15 +62,15 @@ function  [compressed_component, Res,QX] = f_jpeg_compression(component)
     coefficient_temps = 0;
     for i1 = 1:8:row
         for i2 = 1:8:coln
-            %Décomposition de la composante en blocs 8x8
+            %Dï¿½composition de la composante en blocs 8x8
             block = component(i1:i1+7,i2:i2+7);
             %Calcul de la DCT
             block_DCT = bdct(block, [8,8]); 
-            %Pondération des coefficients de la DCT par la matrice de
-            %qualité
+            %Pondï¿½ration des coefficients de la DCT par la matrice de
+            %qualitï¿½
             block_DCT = reshape(block_DCT, 8,8); 
             block_q = round(block_DCT./QX);
-            %Balayage des coefficients quantifiés... 
+            %Balayage des coefficients quantifiï¿½s... 
             coefficients = f_balayage(block_q);
             %...pour separer la composante DC et les composantes AC...
             dc_coefficients = [dc_coefficients, coefficients(1)];
@@ -85,8 +85,8 @@ function  [compressed_component, Res,QX] = f_jpeg_compression(component)
             coefficient_temps = coefficients(1);
         end
     end
-    %%Fin des étapes pour la compression des blocs 8x8
-    %% Début du codage entropique (Huffman)
+    %%Fin des ï¿½tapes pour la compression des blocs 8x8
+    %% Dï¿½but du codage entropique (Huffman)
     source = cell(1,1);
     source_vector = [];
     source{1} =  true_coefficients;

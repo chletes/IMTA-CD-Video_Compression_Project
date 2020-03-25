@@ -32,7 +32,7 @@ function  [compressed_component, Res,QX] = f_jpeg_compression(component)
     %On aurait pu faire un input() pour que l'utilisateur du 
     %code puisse changer la qualité, mais pour faire nos tests, c'est plus 
     %simple comme ça.
-    quality = 90;  %La qualité est fixé avec cette variable là. 
+    quality = 50;  %La qualité est fixé avec cette variable là. 
     
     Q50 = [ 16 11 10 16 24 40 51 61;
             12 12 14 19 26 58 60 55;

@@ -24,20 +24,31 @@ addpath('../ressources/TP1_Lossless_Coding/');
 addpath('../ressources/BlockMatchingAlgoMPEG/');
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 300;
-gap = 8;
+Nframe_max = 10^6;
+gap = 7;
 total_bit = 0;
 % Open the file
 fid = fopen(file,'r');
 if (fid == -1)
     disp('Error with your file, check the filename.');
 else
-    [compY,compU,compV]=f_yuv_import(file,[176 144],Nframe,0);
+    %% Encoder
+    %On obtient les composants YUV de chaque image dans le video ainsi que
+    %le nombre de frame.
+    [compY,compU,compV,Nframe]=f_yuv_import(file,[176 144],Nframe_max,0);
     motionVectY_video = cell(1,Nframe);
     motionVectU_video = cell(1,Nframe);
     motionVectV_video = cell(1,Nframe);
-    x = linspace(1,Nframe,Nframe);
-    for j = 1:Nframe/gap-1
+
+    % On calcule les motions vectors de chaque frame par utiliser
+    % "Exhautive search". Ici, le "target frame" est le frame i et le frame
+    % réference est le frame i-1. Le resultat est sauvegardé dans le cell  
+    % motionVect..._video, à la position i. Par example: on calcule le
+    % motion vector de frame 1 (reference) à frame 2 (target). Donc Le resultat est 
+    % sauvegardé à la position 2 dans le cell. 
+    % Pout les frames intras, ils n'ont pas besoin de devenir des "target" frames, donc aux positions 
+    % des frames intras,il n'y a aucun information.
+    for j = 1:ceil(Nframe/gap)-1
         for i = 2+gap*(j-1):gap*j
             
             [motionVectY, EScomputationsY] = motionEstES(compY{i}, compY{i-1}, 8, 7);
@@ -46,12 +57,6 @@ else
             motionVectU_video{i} = motionVectU;
             [motionVectV, EScomputationsV] = motionEstES(compV{i}, compV{i-1}, 8, 7); 
             motionVectV_video{i} = motionVectV;
-%             [motionVectY, EScomputationsY] = motionEstES(compY{i}, compY{gap*j+1}, 8, 7);
-%             motionVectY_video{i}(3:4,:) = motionVectY;           
-%             [motionVectU, EScomputationsU] = motionEstES(compU{i}, compU{gap*j+1}, 8, 7);
-%             motionVectU_video{i}(3:4,:) = motionVectU;
-%             [motionVectV, EScomputationsV] = motionEstES(compV{i}, compV{gap*j+1}, 8, 7); 
-%             motionVectV_video{i}(3:4,:) = motionVectV;
         end
     end
     for i = 2+gap*j:Nframe       
@@ -66,7 +71,11 @@ else
     compY_predict_video = compY;
     compU_predict_video = compU;
     compV_predict_video = compV; 
-    for j = 1:Nframe/gap-1
+    
+    % On fait le motion compensation pour les frames non-intras et fait les
+    % soustrations avec leur frames originaux. On sauvegarde ces
+    % informations.
+    for j = 1:ceil(Nframe/gap)-1
         for i = 2+gap*(j-1):gap*j
             imgCompY = motionComp(compY{i-1}, motionVectY_video{i}, 8);
             compY_predict_video{i} = compY{i} - imgCompY;           
@@ -74,12 +83,6 @@ else
             compU_predict_video{i} = compU{i} - imgCompU;
             imgCompV = motionComp(compV{i-1}, motionVectV_video{i}, 8);
             compV_predict_video{i} = compV{i} - imgCompV;
-%             [motionVectY, EScomputationsY] = motionEstES(compY{i}, compY{gap*j+1}, 8, 7);
-%             motionVectY_video{i}(3:4,:) = motionVectY;           
-%             [motionVectU, EScomputationsU] = motionEstES(compU{i}, compU{gap*j+1}, 8, 7);
-%             motionVectU_video{i}(3:4,:) = motionVectU;
-%             [motionVectV, EScomputationsV] = motionEstES(compV{i}, compV{gap*j+1}, 8, 7); 
-%             motionVectV_video{i}(3:4,:) = motionVectV;
         end
     end
     for i = 2+gap*j:Nframe 
@@ -91,29 +94,7 @@ else
         compV_predict_video{i} = compV{i} - imgCompV;        
     end
     
-
-%     compY_predict_video = cell(1,Nframe);
-%     compU_predict_video = cell(1,Nframe);
-%     compV_predict_video = cell(1,Nframe);    
-%     compY_compression_video = cell(1,Nframe);
-%     compU_compression_video = cell(1,Nframe);
-%     compV_compression_video = cell(1,Nframe);
-%     compressed_infoY_video = cell(1,Nframe);
-%     compressed_infoU_video = cell(1,Nframe);
-%     compressed_infoV_video = cell(1,Nframe);
-%     compY_decoded_video = cell(1,Nframe);
-%     compU_decoded_video = cell(1,Nframe);
-%     compV_decoded_video = cell(1,Nframe);
-    %predicted coding
-%     compY_predict_video{1} = compY{1};
-%     compU_predict_video{1} = compU{1};
-%     compV_predict_video{1} = compV{1};
-%     for i = 2:Nframe
-%         compY_predict_video{i} = compY{i} - compY{i-1};
-%         compU_predict_video{i} = compU{i} - compU{i-1};
-%         compV_predict_video{i} = compV{i} - compV{i-1};
-%     end
-    
+   % On encode les frames intras et les differences.
     for i = 1:Nframe
         size_compY = size (compY{i});
         size_compU = size (compU{i});
@@ -133,7 +114,7 @@ else
     motionY_huffman = cell(1,1);
     motionU_huffman = cell(1,1);
     motionV_huffman = cell(1,1);
-    for j = 1:Nframe/gap-1
+    for j = 1:ceil(Nframe/gap)-1
         for i = 2+gap*(j-1):gap*j
             motionY_huffman{1} = reshape ( motionVectY_video{i},[1,length(motionVectY_video{i}(1,:))*2]);
             motionU_huffman{1} = reshape ( motionVectU_video{i},[1,length(motionVectU_video{i}(1,:))*2]);
@@ -144,9 +125,12 @@ else
            motionY_compression_video{i} = motionY_compression;
            motionU_compression_video{i} = motionU_compression;
            motionV_compression_video{i} = motionV_compression;
+           % On utilise le fichier Huff06 pour calculer le nombre de bits
+           % totale pour coder le video
            total_bit = total_bit + motionY_info(1,3) + motionU_info(1,3) + motionV_info(1,3);
         end
     end
+    % On doit aussi coder les motions vectors pour le processus decoder
     for i = 2+gap*j:Nframe 
             motionY_huffman{1} = reshape ( motionVectY_video{i},[1,length(motionVectY_video{i}(1,:))*2]);
             motionU_huffman{1} = reshape ( motionVectU_video{i},[1,length(motionVectU_video{i}(1,:))*2]);
@@ -160,8 +144,9 @@ else
            total_bit = total_bit + motionY_info(1,3) + motionU_info(1,3) + motionV_info(1,3);
     end
     
-    %% decoder
-    for j = 1:Nframe/gap-1
+    %% Decoder
+    % On decode les frames intras, les differences et motion vectors et sauvegarde dans un cell
+    for j = 1:ceil(Nframe/gap)-1
         for i = 2+gap*(j-1):gap*j
             motionY_reconstructed = Huff06(motionY_compression_video{i});
             motionU_reconstructed = Huff06(motionU_compression_video{i});
@@ -181,12 +166,7 @@ else
     end
 
     for i = 1:Nframe
-%         compY_huff = Huff06(compY_compression_video{i});
-%         compU_huff = Huff06(compU_compression_video{i});
-%         compV_huff = Huff06(compV_compression_video{i});
-%         [compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
-%         [compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
-%         [compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
+
         compY_decoded = f_jpeg_decompression(compY_compression_video{i}, QX, size_compY);
         compU_decoded = f_jpeg_decompression(compU_compression_video{i}, QX, size_compU);
         compV_decoded = f_jpeg_decompression(compV_compression_video{i}, QX, size_compV);
@@ -194,24 +174,8 @@ else
         compU_decoded_video{i} = compU_decoded;
         compV_decoded_video{i} = compV_decoded;  
     end
-%   %      [compR, compG, compB] = f_yuv_to_rgb(compY{i}, compU{i}, compV{i});
-% 
-%     %    [compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
-%     %     rgbImage = cat(3, compR,compG,compB);
-%     %     rgbImage_decoded = cat(3, compR_decoded,compG_decoded,compB_decoded);
-%     %     gray_pixel = 0.27*compR + 0.67*compG + 0.06*compB;
-%     % Im=zeros(size(compR_decoded,1),size(compR_decoded,2),3);
-%     % Im(:,:,1)=compR_decoded;
-%     % Im(:,:,2)=compG_decoded;
-%     % Im(:,:,3)=compB_decoded;
-%     %     imshow(rgbImage);
-% %           figure (2);
-% %           subplot(2,1,1)
-% %           imagesc(compY{1}'); 
-% %          subplot(2,1,2)
-% %           imagesc(compY_decoded'); 
-%     end
-    for j = 1:Nframe/gap-1
+    %On utilise la motion compensation pour decoder les images non-intras
+    for j = 1:ceil(Nframe/gap)-1
         for i = 2+gap*(j-1):gap*j
             imgCompY_decoded = motionComp(compY_decoded_video{i-1}, motionY_reconstructed_video{i}, 8);
             compY_decoded_video{i} = compY_decoded_video{i} + imgCompY_decoded;
@@ -229,23 +193,19 @@ else
             imgCompV_decoded = motionComp(compV_decoded_video{i-1}, motionV_reconstructed_video{i}, 8);
             compV_decoded_video{i} = compV_decoded_video{i} + imgCompV_decoded;
     end
+    % On retourne à la domaine RGB
     for i = 1:Nframe
         [compR, compG, compB] = f_yuv_to_rgb(compY_decoded_video{i}, compU_decoded_video{i}', compV_decoded_video{i}');
         rgbImage{i} = cat(3, (compR),(compG),compB);
     end
 
-%           figure (2);
-%           subplot(2,1,1)
-%           imagesc(compY{end}); 
-%          subplot(2,1,2)
-%           imagesc(compY_decoded_video{end});
+
 % % Play video
     for i = 1:Nframe
-        imshow(rgbImage{i});
+        video(:,:,:,i) = (rgbImage{i});
     end
-     
-
-     fclose(fid);
+    implay(video,Nframe/10);
+    fclose(fid);
      
 end
 

@@ -1,4 +1,4 @@
-function [Y,U,V]=yuv_import(filename,dims,numfrm,startfrm)
+function [Y,U,V,Nframe]=yuv_import(filename,dims,numfrm,startfrm)
 
 fid=fopen(filename,'r');
 if (fid < 0) 
@@ -15,11 +15,17 @@ if (nargin == 4) %go to the starting frame
 end;
 
 
-Y = cell(1,numfrm);
-U = cell(1,numfrm);
-V = cell(1,numfrm);
 for i=1:numfrm
     Yd = fread(fid,[dims(1) dims(2)],'uint8');
+    % Verifier le nombre de frame. Si Yd = [], on s'arret et sauvegarder le
+    % nomber de frame.
+    stop = isempty(Yd);
+    if stop == 1
+        Nframe = i - 1;
+        break
+    else Nframe = numfrm;
+    end
+    
     Y{i} = Yd';   
     UVd = fread(fid,[dims(1)/2 dims(2)/2],'uint8');
     U{i} = UVd';

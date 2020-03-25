@@ -23,15 +23,18 @@ addpath('../ressources/video_and_code/');
 addpath('../ressources/TP1_Lossless_Coding/');
 %Filename
 file = "../data/images/news.qcif";
-Nframe = 100;
-gap = 8;
+Nframe_max = 10^6;
+gap = 7;
 total_bit = 0;
 % Open the file
 fid = fopen(file,'r');
 if (fid == -1)
     disp('Error with your file, check the filename.');
 else
-    [compY,compU,compV]=f_yuv_import(file,[176 144],Nframe,0);
+    %% Encoder
+    %On obtient les composants YUV de chaque image dans le video ainsi que
+    %le nombre de frame.
+    [compY,compU,compV,Nframe]=f_yuv_import(file,[176 144],Nframe_max,0);
     compY_predict_video = cell(1,Nframe);
     compU_predict_video = cell(1,Nframe);
     compV_predict_video = cell(1,Nframe);    
@@ -44,11 +47,20 @@ else
     compY_decoded_video = cell(1,Nframe);
     compU_decoded_video = cell(1,Nframe);
     compV_decoded_video = cell(1,Nframe);
-    %predicted coding
+    
+    %predicted coding: ici, on utilise le codage preditif par calculer le
+    %difference entre 2 images qui sont à côté pour avoir plus difference
+    %posible (donc diminuer le nombre de bit codé)
     compY_predict_video = compY;
     compU_predict_video = compU;
     compV_predict_video = compV;
-    for j = 1:Nframe/gap-1
+    
+    %On maintient un frame intra (codé completement, sans prendre la difference) dans 
+    %chaque "gap"(un nombre) frame. Par example: si %gap = 7; les frames intras sont 
+    %apparus dans le position 1,8,15,22,...
+    %Le but est de diminuer les errors en raison de quantifier quand on
+    %decode. 
+    for j = 1:ceil(Nframe/gap)-1
         for i = 2+gap*(j-1):gap*j
 
             compY_predict_video{i} = compY{i} - compY{i-1};
@@ -66,6 +78,7 @@ else
         size_compY = size (compY{i});
         size_compU = size (compU{i});
         size_compV = size (compV{i});
+        %Nous utilisons la compression jpeg pour les frame intras et les differences
         [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY_predict_video{i});
         [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU_predict_video{i});
         [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV_predict_video{i});
@@ -75,40 +88,25 @@ else
         compressed_infoY_video{i} = compressed_infoY;
         compressed_infoU_video{i} = compressed_infoU;
         compressed_infoV_video{i} = compressed_infoV;
+        % On utilise le fichier Huff06 pour calculer le nombre de bits
+        % totale pour coder le video
         total_bit = total_bit + compressed_infoY (1,3)+compressed_infoU (1,3)+compressed_infoV (1,3);
         
-    %% decoder
+    %% Decoder
         
-        %compY_huff = Huff06(compY_compression);
-        %compU_huff = Huff06(compU_compression);
-        %compV_huff = Huff06(compV_compression);
-        %[compY_decoded] = f_ac_dc_separated(compY_huff,QX,size_compY);
-        %[compU_decoded] = f_ac_dc_separated(compU_huff,QX,size_compU);
-        %[compV_decoded] = f_ac_dc_separated(compV_huff,QX,size_compV);
+        % On decode les frames intras et les differences et sauvegarde dans un cell
         compY_decoded = f_jpeg_decompression(compY_compression, QX, size_compY);
         compU_decoded = f_jpeg_decompression(compU_compression, QX, size_compU);
         compV_decoded = f_jpeg_decompression(compV_compression, QX, size_compV);
         compY_decoded_video{i} = compY_decoded;
         compU_decoded_video{i} = compU_decoded;
         compV_decoded_video{i} = compV_decoded;        
-  %      [compR, compG, compB] = f_yuv_to_rgb(compY{i}, compU{i}, compV{i});
 
-    %    [compR_decoded, compG_decoded, compB_decoded] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
-    %     rgbImage = cat(3, compR,compG,compB);
-    %     rgbImage_decoded = cat(3, compR_decoded,compG_decoded,compB_decoded);
-    %     gray_pixel = 0.27*compR + 0.67*compG + 0.06*compB;
-    % Im=zeros(size(compR_decoded,1),size(compR_decoded,2),3);
-    % Im(:,:,1)=compR_decoded;
-    % Im(:,:,2)=compG_decoded;
-    % Im(:,:,3)=compB_decoded;
-    %     imshow(rgbImage);
-%           figure (2);
-%           subplot(2,1,1)
-%           imagesc(compY{1}'); 
-%          subplot(2,1,2)
-%           imagesc(compY_decoded'); 
+
     end
-    for j = 1:Nframe/gap-1
+    
+    %On decode le codage preditif.
+     for j = 1:ceil(Nframe/gap)-1
         for i = 2+gap*(j-1):gap*j
             compY_decoded_video{i} = compY_decoded_video{i} + compY_decoded_video{i-1};
             compU_decoded_video{i} = compU_decoded_video{i} + compU_decoded_video{i-1};
@@ -120,20 +118,18 @@ else
             compU_decoded_video{i} = compU_decoded_video{i} + compU_decoded_video{i-1};
             compV_decoded_video{i} = compV_decoded_video{i} + compV_decoded_video{i-1};
     end
+    
+    % On retourne à la domaine RGB
     for i = 1:Nframe
         [compR, compG, compB] = f_yuv_to_rgb(compY_decoded_video{i}, compU_decoded_video{i}', compV_decoded_video{i}');
         rgbImage{i} = cat(3, (compR),(compG),compB);
     end
 
-%           figure (2);
-%           subplot(2,1,1)
-%           imagesc(compY{3}); 
-%          subplot(2,1,2)
-%           imagesc(compY_decoded_video{3});
 % Play video
     for i = 1:Nframe
-        imshow(rgbImage{i});
+        video(:,:,:,i) = (rgbImage{i});
     end
+    implay(video,Nframe/10);
     fclose(fid);
 end
 

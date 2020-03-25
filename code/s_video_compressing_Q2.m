@@ -86,15 +86,18 @@ else
 %          subplot(2,1,2)
 %           imagesc(compY_decoded); 
     end
+    for i = 1:Nframe
+        [compR, compG, compB] = f_yuv_to_rgb(compY_decoded_video{i}, compU_decoded_video{i}', compV_decoded_video{i}');
+        rgbImage{i} = cat(3, (compR),(compG),compB);
+    end
 %           figure (2);
 %           subplot(2,1,1)
 %           imagesc(compU{1}); 
 %          subplot(2,1,2)
 %           imagesc(compU_decoded_video{1}); 
     for i = 1:Nframe
-        video(:,:,i) = uint8(compY_decoded_video{i});
+        imshow(rgbImage{i});
     end
-    implay(video,20);
     fclose(fid);
 end
 

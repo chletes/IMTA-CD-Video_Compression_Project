@@ -42,7 +42,7 @@ else
     compY_decoded = f_jpeg_decompression(compY_compression, QX, size_compY);
     compU_decoded = f_jpeg_decompression(compU_compression, QX, size_compU);
     compV_decoded = f_jpeg_decompression(compV_compression, QX, size_compV);
-    [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV);
+    [compR, compG, compB] = f_yuv_to_rgb(compY_decoded, compU_decoded, compV_decoded);
     rgbImage = cat(3, (compR),(compG),(compB));
     
     toc    

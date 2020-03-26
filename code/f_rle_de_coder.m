@@ -1,5 +1,5 @@
 function  [data_out] = f_rle_de_coder(data_in)
-% data_out = rle(data_in) (de)compresses the data with the RLE-Algorithm
+% data_out = f_rle_de_coder(data_in) (de)compresses the data with the RLE-Algorithm
 %   Compression:
 %      if data_in is a numbervector data_out{1} contains the values
 %      and data_out{2} contains the run lenths

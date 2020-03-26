@@ -1,28 +1,3 @@
-%
-% PURPOSE: 
-%
-% FUNCTION CALL:
-%
-% [outputs] = name_of_the_function(inputs)
-%
-% ARGUMENTS IN: Explanation of the inputs
-%
-%
-% ARGUMENTS OUT: Explanation of the outputs
-%
-% 
-%
-% EXTERNAL FUNCTIONS USED:
-%
-%
-% SCRIPTS CALLING FUNCTION:
-%
-%
-% REFERENCES/NOTES/COMMENTS:
-%
-% 
-%**********************************************************************************************
-
 function out=f_decoder_balayage(in,num_rows,num_cols)
 % Inverse Zig-zag scanning
 % This function reorders a 1-D array into a specifiable

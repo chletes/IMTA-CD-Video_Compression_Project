@@ -1,28 +1,3 @@
-%
-% PURPOSE: 
-%
-% FUNCTION CALL:
-%
-% [outputs] = name_of_the_function(inputs)
-%
-% ARGUMENTS IN: Explanation of the inputs
-%
-%
-% ARGUMENTS OUT: Explanation of the outputs
-%
-% 
-%
-% EXTERNAL FUNCTIONS USED:
-%
-%
-% SCRIPTS CALLING FUNCTION:
-%
-%
-% REFERENCES/NOTES/COMMENTS:
-%
-% 
-%**********************************************************************************************
-
 function  [compR, compG, compB] = f_yuv_to_rgb(compY, compU, compV)
     
     compY = double(compY);

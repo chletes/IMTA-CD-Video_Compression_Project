@@ -1,28 +1,3 @@
-%
-% PURPOSE: 
-%
-% FUNCTION CALL:
-%
-% [outputs] = name_of_the_function(inputs)
-%
-% ARGUMENTS IN: Explanation of the inputs
-%
-%
-% ARGUMENTS OUT: Explanation of the outputs
-%
-% 
-%
-% EXTERNAL FUNCTIONS USED:
-%
-%
-% SCRIPTS CALLING FUNCTION:
-%
-%
-% REFERENCES/NOTES/COMMENTS:
-%
-% 
-%**********************************************************************************************
-
 function  [compressed_component, Res,QX] = f_jpeg_compression(component)
     addpath('../ressources/TP1_Lossless_Coding/');
     addpath('../ressources/TP2_Lossy_Source_Coding/');

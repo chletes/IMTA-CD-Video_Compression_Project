@@ -1,28 +1,3 @@
-%
-% PURPOSE: 
-%
-% FUNCTION CALL:
-%
-% [outputs] = name_of_the_function(inputs)
-%
-% ARGUMENTS IN: Explanation of the inputs
-%
-%
-% ARGUMENTS OUT: Explanation of the outputs
-%
-% 
-%
-% EXTERNAL FUNCTIONS USED:
-%
-%
-% SCRIPTS CALLING FUNCTION:
-%
-%
-% REFERENCES/NOTES/COMMENTS:
-%
-% 
-%**********************************************************************************************
-
 function  [data_out] = f_rle_de_coder(data_in)
 % data_out = rle(data_in) (de)compresses the data with the RLE-Algorithm
 %   Compression:

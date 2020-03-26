@@ -1,23 +1,3 @@
-%
-%
-%
-% PURPOSE : 
-%
-% USAGE : (Command Window) :
-%
-%
-%
-% 
-% EXTERNAL FUNCTIONS USED :
-%
-%
-% 
-% REFERENCES/NOTES/COMMENTS :
-%
-%
-% 
-%**********************************************************************************************
-
 clc, clear, close all;
 addpath('../ressources/video_and_code/');
 addpath('../ressources/TP1_Lossless_Coding/');

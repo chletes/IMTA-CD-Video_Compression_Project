@@ -1,4 +1,26 @@
 function  [source_balayee] = f_balayage(block)
+% Zig-zag scanning
+% This function reorders a 1-D array into a specifiable
+% 2-D matrix by implementing the INVERSE ZIG-ZAG SCNANNING procedure.
+% IN specifies the input 1-D array or vector
+% NUM_ROWS is the number of rows desired in the output matrix
+% NUM_COLS is the number of columns desired in the output matrix
+% OUT is the resulting inverse zig-zag scanned matrix
+% having the same number of elements as vector IN
+%
+% As an example,
+% 
+% OUT = f_balayage(IN)
+% IN =
+%	1     2     3
+%	4     5     6
+%	7     8     9
+%	10    11    12
+% OUT = [1     2     4     7     5     3     6     8    10    11     9    12];
+%
+% IMT ATLANTIQUE
+% Binh Minh NGUYEN
+% Carlos SANTOS SEISDEDOS
     [num_rows num_cols]=size(block);
     % Initialise the output vector
     source_balayee=zeros(1,num_rows*num_cols);

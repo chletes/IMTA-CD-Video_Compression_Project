@@ -1,4 +1,4 @@
-function out=f_decoder_balayage(in,num_rows,num_cols)
+function out=f_balayage_inverse(in,num_rows,num_cols)
 % Inverse Zig-zag scanning
 % This function reorders a 1-D array into a specifiable
 % 2-D matrix by implementing the INVERSE ZIG-ZAG SCNANNING procedure.

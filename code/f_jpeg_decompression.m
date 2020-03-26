@@ -45,7 +45,7 @@ function  [Image_origin_decoded] = f_jpeg_decompression(component_coded, QX,size
         each_block = [];
         each_block = [dc_component(block_position),ac_coefficients_decoded(i:i+62)];
         %Balayage inverse des blocs
-        each_block_debalayage = f_decoder_balayage(each_block,8,8);
+        each_block_debalayage = f_balayage_inverse(each_block,8,8);
         %Quantification inverse des blocs
         each_block_dequatification = each_block_debalayage.*QX;
         each_block_ibdct = ibdct (reshape(each_block_dequatification,64,1),[8,8],[8,8]);

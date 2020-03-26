@@ -11,13 +11,18 @@ if (fid == -1)
     disp('Error with your file, check the filename.');
 else
     %% Codage de l'image
+    %On aurait pu faire un input() pour que l'utilisateur du 
+    %code puisse changer la qualite, mais pour faire nos tests, c'est plus 
+    %simple comme ca.
+    quality = 10;  %La qualite est fixee avec cette variable la 
+    disp(['Q = ',  num2str(quality), '%']);
     [compY,compU,compV]=yuv_readimage(fid);
     size_compY = size (compY);
     size_compU = size (compU);
     size_compV = size (compV);
-    [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY);
-    [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU);
-    [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV);
+    [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY, quality);
+    [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU, quality);
+    [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV, quality);
     %% D�codage de l'image
     compY_decoded = f_jpeg_decompression(compY_compression, QX, size_compY);
     compU_decoded = f_jpeg_decompression(compU_compression, QX, size_compU);

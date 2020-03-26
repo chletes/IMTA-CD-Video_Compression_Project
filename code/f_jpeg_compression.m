@@ -1,14 +1,11 @@
-function  [compressed_component, Res,QX] = f_jpeg_compression(component)
+function  [compressed_component, Res,QX] = f_jpeg_compression(component, quality)
     addpath('../ressources/TP1_Lossless_Coding/');
     addpath('../ressources/TP2_Lossy_Source_Coding/');
     addpath('../ressources/video_and_code/');
     %% Debut du calcul de la matrice de quantification. 
     %La qualite de l'image depend de cette matrice.
-    %On aurait pu faire un input() pour que l'utilisateur du 
-    %code puisse changer la qualite, mais pour faire nos tests, c'est plus 
-    %simple comme ca.
-    quality = 10;  %La qualite est fixee avec cette variable la 
-    disp(['Q = ',  num2str(quality), '%']);
+    
+    
     Q50 = [ 16 11 10 16 24 40 51 61;
             12 12 14 19 26 58 60 55;
             14 13 16 24 40 57 69 56;

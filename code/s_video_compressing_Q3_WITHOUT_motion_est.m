@@ -3,7 +3,7 @@ addpath('../ressources/video_and_code/');
 addpath('../ressources/TP1_Lossless_Coding/');
 %Filename
 file = "../data/images/news.qcif";
-Nframe_max = 10^6;
+Nframe_max = 10;
 gap = 7;
 total_bit = 0;
 % Open the file
@@ -14,6 +14,8 @@ else
     %% Encoder
     %On obtient les composants YUV de chaque image dans le video ainsi que
     %le nombre de frame.
+    quality = 10;  %La qualite est fixee avec cette variable la 
+    disp(['Q = ',  num2str(quality), '%']);
     [compY,compU,compV,Nframe]=f_yuv_import(file,[176 144],Nframe_max,0);
     compY_predict_video = cell(1,Nframe);
     compU_predict_video = cell(1,Nframe);
@@ -59,9 +61,9 @@ else
         size_compU = size (compU{i});
         size_compV = size (compV{i});
         %Nous utilisons la compression jpeg pour les frame intras et les differences
-        [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY_predict_video{i});
-        [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU_predict_video{i});
-        [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV_predict_video{i});
+        [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY_predict_video{i}, quality);
+        [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU_predict_video{i}, quality);
+        [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV_predict_video{i}, quality);
         compY_compression_video{i} = compY_compression;
         compU_compression_video{i} = compU_compression;
         compV_compression_video{i} = compV_compression;

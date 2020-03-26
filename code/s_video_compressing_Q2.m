@@ -12,6 +12,8 @@ if (fid == -1)
 else
     %On obtient les composants YUV de chaque image dans le video ainsi que
     %le nombre de frame.
+    quality = 10;  %La qualite est fixee avec cette variable la 
+    disp(['Q = ',  num2str(quality), '%']);
     [compY,compU,compV,Nframe]=f_yuv_import("../data/images/news.qcif",[176 144],Nframe_max,0);
     compY_compression_video = cell(1,Nframe);
     compU_compression_video = cell(1,Nframe);
@@ -29,9 +31,9 @@ else
         size_compV = size (compV{i});
         % Nous utilisons la compression jpeg pour chaque image dans le
         % video sans relation avec les autres
-        [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY{i});
-        [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU{i});
-        [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV{i});
+        [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY{i}, quality);
+        [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU{i}, quality);
+        [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV{i}, quality);
         % Nous sauvegradons chaque image compressé dans chaque cell
         % correspondant
         compY_compression_video{i} = compY_compression;

@@ -23,7 +23,7 @@ else
     [compY_compression,compressed_infoY,QX] = f_jpeg_compression(compY, quality);
     [compU_compression,compressed_infoU,QX] = f_jpeg_compression(compU, quality);
     [compV_compression,compressed_infoV,QX] = f_jpeg_compression(compV, quality);
-    %% D�codage de l'image
+    %% Decodage de l'image
     compY_decoded = f_jpeg_decompression(compY_compression, QX, size_compY);
     compU_decoded = f_jpeg_decompression(compU_compression, QX, size_compU);
     compV_decoded = f_jpeg_decompression(compV_compression, QX, size_compV);
@@ -41,9 +41,9 @@ else
     compressed_size = size(compY_compression,1)+ size(compU_compression,1)+ size(compV_compression,1);
     rate = (uncompressed_size )/(compressed_size);
     disp(['Compression rate : ', num2str(rate)]);
-    %% Lecture de l'image d�compress�
-%     figure (1);
-%     imshow(rgbImage); 
+    %% Lecture de l'image decompressee
+    figure (1);
+    imshow(rgbImage); 
 end
 
 

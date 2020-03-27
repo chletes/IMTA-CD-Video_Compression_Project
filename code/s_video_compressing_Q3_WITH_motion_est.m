@@ -5,7 +5,7 @@ addpath('../ressources/BlockMatchingAlgoMPEG/');
 tic
 %Filename
 file = "../data/images/news.qcif";
-Nframe_max = 50;
+Nframe_max = 200;
 gap = 7;
 total_bit = 0;
 % Open the file
@@ -14,7 +14,7 @@ if (fid == -1)
     disp('Error with your file, check the filename.');
 else
     %% Encoder
-    quality = 50;  %La qualite est fixee avec cette variable la 
+    quality = 90;  %La qualite est fixee avec cette variable la 
     disp(['Q = ',  num2str(quality), '%']);
     %On obtient les composants YUV de chaque image dans le video ainsi que
     %le nombre de frame.
@@ -22,7 +22,7 @@ else
     motionVectY_video = cell(1,Nframe);
     motionVectU_video = cell(1,Nframe);
     motionVectV_video = cell(1,Nframe);
-
+    disp(['Nombre de frames : ', num2str(Nframe)]);
     % On calcule les motions vectors de chaque frame par utiliser
     % "Exhautive search". Ici, le "target frame" est le frame i et le frame
     % réference est le frame i-1. Le resultat est sauvegardé dans le cell  
@@ -184,10 +184,10 @@ else
     disp(['Compression rate of the video = ', num2str(rate)]);
 
 % % Play video
-%     for i = 1:Nframe
-%         video(:,:,:,i) = (rgbImage{i});
-%     end
-%     implay(video,Nframe/10);
+    for i = 1:Nframe
+        video(:,:,:,i) = (rgbImage{i});
+    end
+    implay(video,Nframe/10);
     
      
 end

@@ -4,7 +4,7 @@ addpath('../ressources/TP1_Lossless_Coding/');
 tic
 %Filename
 file = "../data/images/news.qcif";
-Nframe_max = 200;
+Nframe_max = 300;
 total_bit = 0;
 % Open the file
 fid = fopen(file,'r');
@@ -13,7 +13,7 @@ if (fid == -1)
 else
     %On obtient les composants YUV de chaque image dans le video ainsi que
     %le nombre de frame.
-    quality = 90;  %La qualite est fixee avec cette variable la 
+    quality = 50;  %La qualite est fixee avec cette variable la 
     disp(['Q = ',  num2str(quality), '%']);
     [compY,compU,compV,Nframe]=f_yuv_import("../data/images/news.qcif",[176 144],Nframe_max,0);
     compY_compression_video = cell(1,Nframe);

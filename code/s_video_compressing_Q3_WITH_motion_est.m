@@ -5,7 +5,7 @@ addpath('../ressources/BlockMatchingAlgoMPEG/');
 tic
 %Filename
 file = "../data/images/news.qcif";
-Nframe_max = 200;
+Nframe_max = 300;
 gap = 7;
 total_bit = 0;
 % Open the file
@@ -14,7 +14,7 @@ if (fid == -1)
     disp('Error with your file, check the filename.');
 else
     %% Encoder
-    quality = 90;  %La qualite est fixee avec cette variable la 
+    quality = 50;  %La qualite est fixee avec cette variable la 
     disp(['Q = ',  num2str(quality), '%']);
     %On obtient les composants YUV de chaque image dans le video ainsi que
     %le nombre de frame.

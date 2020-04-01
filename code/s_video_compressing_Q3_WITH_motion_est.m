@@ -178,7 +178,7 @@ else
     compressed_size_video = 0;
     for i = 1:Nframe
         uncompressed_size_video = uncompressed_size_video + size(compY{i},1)*size(compY{i},2) + size(compU{i},1)*size(compU{i},2) + size(compV{i},1)*size(compV{i},2);
-        compressed_size_video = compressed_size_video + size(compY_compression_video{i},1)+ size(compU_compression_video{i},1)+ size(compV_compression_video{i},1);    
+        compressed_size_video = compressed_size_video + size(compY_compression_video{i},1)+ size(compU_compression_video{i},1)+ size(compV_compression_video{i},1)+size(motionY_compression_video{i},1)+size(motionU_compression_video{i},1)+size(motionV_compression_video{i},1); % Car on doit coder aussi les vectors des mouvements.   
     end
     rate = (uncompressed_size_video )/(compressed_size_video);
     disp(['Compression rate of the video = ', num2str(rate)]);
